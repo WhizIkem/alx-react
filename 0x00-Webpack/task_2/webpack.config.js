@@ -12,10 +12,16 @@ module.exports = {
       // Image handling rule configuration for .jpg files
       {
         test: /\.(png|jpe?g|gif|svg)$/,
-        type: 'asset/resource', // Use asset modules for images
-        generator: {
-          filename: 'assets/[name][ext]', // Output image files to assets directory
-        },
+        use: [
+          "file-loader",
+          {
+            loader: "image-webpack-loader",
+            options: {
+              disable: true,
+              bypassOnDebug: true,
+            },
+          },
+        ],
       },
       // CSS rule configuration
       {
