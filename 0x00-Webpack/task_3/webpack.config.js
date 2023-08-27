@@ -49,7 +49,7 @@ module.exports = {
   devServer: {
     port: 8564,
     open: true,
-    static: path.join(__dirname, 'public'),
+    static: path.join(__dirname, './public'),
   },
   performance: {
     hints: false,
