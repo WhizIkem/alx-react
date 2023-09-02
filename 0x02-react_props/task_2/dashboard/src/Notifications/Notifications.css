@@ -14,10 +14,10 @@
   color: var(--color-red);
 }
 
-.Notifications ul li[data-priority="default"] {
+.Notifications [data-notification-type="default"] {
   color: var(--color-blue);
 }
 
-.Notifications ul li[data-priority="urgent"] {
+.Notifications [data-notification-type="urgent"] {
   color: var(--color-red);
 }
