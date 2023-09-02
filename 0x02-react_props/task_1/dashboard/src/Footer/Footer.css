@@ -1,0 +1,12 @@
+:root {
+  --color-brand: #e01d3f;
+}
+.App-footer {
+  border-top: 4px solid var(--color-brand);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: 0;
+  font-style: italic;
+}
