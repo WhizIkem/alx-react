@@ -1,0 +1,28 @@
+:root {
+  --font-family: 'aktiv-grotesk', sans-serif;
+}
+
+#CourseList {
+  width: 90%;
+  border-collapse: collapse;
+  margin: auto;
+  margin-top: 50px;
+}
+
+#CourseList thead {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+}
+
+#CourseList th {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+}
+
+#CourseList td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+}
