@@ -1,0 +1,32 @@
+:root {
+  --color-brand: #e01d3f;
+  --color-blue: blue;
+  --color-red: red;
+}
+
+.Notifications {
+  padding: 1rem;
+  border: 1px dashed var(--color-brand);
+  width: 400px;
+  position: absolute;
+  right: 1rem;
+  top: 2rem;
+  font-size: 16px;
+}
+
+.Notifications ul li {
+  margin: 2px;
+  color: var(--color-red);
+}
+
+.Notifications ul li[data-notification-type="default"] {
+  color: var(--color-blue);
+}
+
+.Notifications ul li[data-notification-type="urgent"] {
+  color: var(--color-red);
+}
+
+.menuItem {
+  text-align: right;
+}
