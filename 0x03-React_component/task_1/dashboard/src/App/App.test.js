@@ -77,10 +77,12 @@ describe('<Test App.js />', () => {
     const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
     const wrapperWithProps = shallow(<App isLoggedIn={true} logOut={logOutMock} />);
 
-    const event = new KeyboardEvent('keydown', {
-      ctrlKey: true,
-      key: 'h',
-    });
+    document.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        ctrlKey: true,
+        key: 'h',
+      })
+    );
 
     window.dispatchEvent(event);
 
