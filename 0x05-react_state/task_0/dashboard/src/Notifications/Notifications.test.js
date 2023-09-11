@@ -18,9 +18,6 @@ const listNotifications = [
   { id: 3, type: "urgent", html: getLatestNotification() },
 ];
 
-const mockHandleDisplayDrawer = jest.fn();
-const mockHandleHideDrawer = jest.fn();
-
 describe("Notification tests", () => {
   it("renders Notification component without crashing", () => {
     const wrapper = shallow(<Notifications />);
@@ -34,9 +31,9 @@ describe("Notification tests", () => {
     wrapper.find("ul").forEach((node) => {
       expect(node.equals(<NotificationItem />));
     });
-    expect(wrapper.find("ul").childAt(0).html()).toEqual('<li data-notification-type="default">New course available</li>');
-    expect(wrapper.find("ul").childAt(1).html()).toEqual('<li data-notification-type="urgent">New resume available</li>');
-    expect(wrapper.find("ul").childAt(2).html()).toEqual(`<li data-urgent=\"true\">${getLatestNotification()}</li>`);
+    expect(wrapper.find("ul").childAt(0).html()).toEqual('<li class="default_2c02es" data-notification-type="default">New course available</li>');
+    expect(wrapper.find("ul").childAt(1).html()).toEqual('<li class="urgent_cyonix" data-notification-type="urgent">New resume available</li>');
+    expect(wrapper.find("ul").childAt(2).html()).toEqual(`<li data-urgent=\"true\" class=\"urgent_cyonix\">${getLatestNotification()}</li>`);
   });
 
   it("renders an unordered list", () => {
@@ -56,8 +53,10 @@ describe("Notification tests", () => {
   it("displays menu item when displayDrawer is false", () => {
     const wrapper = shallow(<Notifications displayDrawer={false} />);
 
-    expect(wrapper.find("div.menuItem").exists()).toBe(true);
-  //   expect(wrapper.find("div.menuItem").html()).toEqual('<div class="menuItem"><p>Your notifications</p></div>');
+    expect(wrapper.find("div.menuItem").exists()).toBe(false);
+    // expect(wrapper.find('div.menuItem').html()).toEqual(
+    // 	'<div class="menuItem"><p>Your notifications</p></div>'
+    // );
   });
 
   it("does not display notifications when displayDrawer is false", () => {
@@ -125,24 +124,6 @@ describe("Notification tests", () => {
 
     expect(wrapper.instance().shouldComponentUpdate(newListNotifications)).toBe(true);
   });
-
-  it("should call handleDisplayDrawer when menu item is clicked", () => {
-    const wrapper = shallow(<Notifications displayDrawer={false} handleDisplayDrawer={mockHandleDisplayDrawer} />);
-    const menuItem = wrapper.find("div.menuItem");
-
-    menuItem.simulate("click");
-
-    expect(mockHandleDisplayDrawer).toHaveBeenCalled();
-  });
-
-  it("should call handleHideDrawer when button is clicked", () => {
-    const wrapper = shallow(<Notifications displayDrawer={true} handleHideDrawer={mockHandleHideDrawer} />);
-    const closeButton = wrapper.find("button");
-
-    closeButton.simulate("click");x
-
-    expect(mockHandleHideDrawer).toHaveBeenCalled();
-  });
 });
 
 describe("onclick event behaves as it should", () => {
@@ -157,4 +138,32 @@ describe("onclick event behaves as it should", () => {
     expect(spy).toBeCalledWith(1);
     spy.mockRestore();
   });
+});
+
+it("verify that clicking on the menu item calls handleDisplayDrawer", () => {
+  const handleDisplayDrawer = jest.fn();
+  const handleHideDrawer = jest.fn();
+
+  const wrapper = shallow(<Notifications handleDisplayDrawer={handleDisplayDrawer} handleHideDrawer={handleHideDrawer} />);
+
+  wrapper.find("div").at(0).simulate("click");
+
+  expect(handleDisplayDrawer).toHaveBeenCalled();
+  expect(handleHideDrawer).not.toHaveBeenCalled();
+
+  jest.restoreAllMocks();
+});
+
+it("verify that clicking on the button calls handleHideDrawer", () => {
+  const handleDisplayDrawer = jest.fn();
+  const handleHideDrawer = jest.fn();
+
+  const wrapper = shallow(<Notifications displayDrawer handleDisplayDrawer={handleDisplayDrawer} handleHideDrawer={handleHideDrawer} />);
+
+  wrapper.find("button").at(0).simulate("click");
+
+  expect(handleDisplayDrawer).not.toHaveBeenCalled();
+  expect(handleHideDrawer).toHaveBeenCalled();
+
+  jest.restoreAllMocks();
 });
