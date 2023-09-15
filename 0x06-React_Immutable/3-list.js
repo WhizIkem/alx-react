@@ -1,6 +1,6 @@
 import { List } from 'immutable';
 
-export function getListobject(array) {
+export function getListObject(array) {
   return List(array);
 }
 
