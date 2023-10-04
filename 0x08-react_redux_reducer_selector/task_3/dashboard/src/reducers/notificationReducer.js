@@ -1,8 +1,9 @@
 import {
   FETCH_NOTIFICATIONS_SUCCESS,
   MARK_AS_READ,
-  SET_TYPE_FILTER
-} from './notificationActionTypes';
+  SET_TYPE_FILTER,
+  NotificationTypeFilters
+} from '../actions/notificationActionTypes';
 
 const initialState = {
   filter: 'DEFAULT',
