@@ -94,6 +94,7 @@ class App extends React.Component {
         <React.Fragment>
           <div className={css(styles.App)}>
             <div className="heading-section">
+              <button className="displayDrawer" onClick={this.handleDisplayDrawer}>Open</button>
               <Notifications
                 listNotifications={this.listNotifications}
                 displayDrawer={this.state.displayDrawer}
@@ -146,10 +147,10 @@ App.propTypes = {
   logOut: PropTypes.func,
 };
 
-function mapStateToProps(state) {
+export const mapStateToProps = (state) => {
   return {
-    isLoggedIn: state.ui.isLoggedIn
+    isLoggedIn: state.get('isLoggedIn')
   };
-}
+};
 
 export default connect(mapStateToProps)(App);

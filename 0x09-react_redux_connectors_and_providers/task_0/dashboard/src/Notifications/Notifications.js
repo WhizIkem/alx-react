@@ -24,11 +24,11 @@ class Notifications extends Component {
     return (
       <React.Fragment>
         {!this.props.displayDrawer ? (
-          <div className={css(styles.menuItem)}>
+          <div className={css(styles.menuItem)} data-testid="menu-item">
             <p>Your notifications</p>
           </div>
         ) : (
-          <div className={css(styles.Notifications)}>
+          <div className={css(styles.Notifications)} data-testid="notif-drawer">
             <button
               style={{
                 color: "#3a3a3a",
@@ -49,11 +49,19 @@ class Notifications extends Component {
             >
               <img src={closeIcon} alt="close icon" width="10px" />
             </button>
-            {this.props.listNotifications.length != 0 ? <p>Here is the list of notifications</p> : null}
-            <ul>
+            {this.props.listNotifications.length != 0 ? <p data-testid="notif-listltext">Here is the list of notifications</p> : null}
+            <ul data-testid="notif-list">
               {this.props.listNotifications.length == 0 ? <NotificationItem type="default" value="No new notification for now" /> : null}
               {this.props.listNotifications.map((val, idx) => {
-                return <NotificationItem type={val.type} value={val.value} html={val.html} key={val.id} markAsRead={this.markAsRead} id={val.id} />;
+                return <NotificationItem
+                  type={val.type}
+                  value={val.value}
+                  html={val.html}
+                  key={val.id}
+                  markAsRead={this.markAsRead}
+                  id={val.id}
+                  data-testid={`notif-item-${idx}`} // added here for each notifications
+                  />;
               })}
             </ul>
           </div>

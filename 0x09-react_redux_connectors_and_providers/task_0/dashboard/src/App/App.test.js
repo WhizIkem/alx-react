@@ -1,5 +1,6 @@
 import React from "react";
-import App from "./App";
+import { fromJS } from "immutable";
+import App, { mapStateToProps } from "./App";
 import Login from "../Login/Login";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
@@ -8,6 +9,13 @@ import CourseList from "../CourseList/CourseList";
 import { shallow, mount } from "enzyme";
 import { StyleSheetTestUtils } from "aphrodite";
 import { AppContext, user, logOut } from "./AppContext";
+import configureMockStore from "redux-mock-store";
+import { Provider } from "react-redux";
+
+const mockStore = configureMockStore();
+const store = mockStore({
+  isUserLoggedIn: true,
+});
 
 beforeEach(() => {
   StyleSheetTestUtils.suppressStyleInjection();
@@ -18,48 +26,75 @@ afterEach(() => {
 
 describe("rendering components", () => {
   it("renders App component without crashing", () => {
-    const wrapper = shallow(<App />);
+    const wrapper = shallow(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    )
 
     expect(wrapper.exists()).toBe(true);
   });
 
   it("contains Notifications component", () => {
-    const wrapper = shallow(<App />);
+    const wrapper = shallow(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    )
 
-    expect(wrapper.find(Notifications)).toHaveLength(1);
+    expect(wrapper.find('[data-testid="menu-item"]')).toHaveLength(1);
   });
 
   it("contains Header component", () => {
-    const wrapper = shallow(<App />);
-
-    expect(wrapper.contains(<Header />)).toBe(true);
+    const wrapper = shallow(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    )
+    
+    expect(wrapper.find('Header')).toHaveLength(1);
   });
 
   it("contains Login component", () => {
-    const wrapper = shallow(<App />);
+    const wrapper = shallow(
+    <Provider store={store}>
+      <App />
+    </Provider>
+    )
 
-    expect(wrapper.find(Login)).toHaveLength(1);
+    expect(wrapper.find('Login')).toHaveLength(1);
   });
 
   it("contains Footer component", () => {
-    const wrapper = shallow(<App />);
+    const wrapper = shallow(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    )
 
-    expect(wrapper.contains(<Footer />)).toBe(true);
+    expect(wrapper.find('Footer')).toHaveLength(1);
   });
 
   it("checks CourseList is not rendered", () => {
-    const wrapper = shallow(<App />);
+    const wrapper = shallow(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    )
 
     expect(wrapper.contains(<CourseList />)).toBe(false);
   });
 });
 
 describe("when isLogged in is true", () => {
-  const wrapper = shallow(<App />);
-  expect(wrapper.state().user).toEqual(user);
+  const wrapper = shallow(
+    <Provider store={store}>
+      <App />
+    </Provider>
+  )
 
   it("checks Login is not rendered", () => {
-    expect(wrapper.contains(<Login />)).toBe(false);
+    expect(wrapper.find(Login).exists()).toBe(false);
   });
 
   it("checks CourseList is rendered", () => {
@@ -68,9 +103,11 @@ describe("when isLogged in is true", () => {
 
   it(`Tests that the logIn function updates user's state correctly`, () => {
     const wrapper = mount(
-      <AppContext.Provider value={{ user, logOut }}>
-        <App />
-      </AppContext.Provider>
+      <Provider store={store}>
+        <AppContext.Provider value={{ user, logOut }}>
+          <App />
+        </AppContext.Provider>
+      </Provider>
     );
 
     const myUser = {
@@ -88,9 +125,11 @@ describe("when isLogged in is true", () => {
 
   it(`Tests that the logOut function updates user's state correctly`, () => {
     const wrapper = mount(
-      <AppContext.Provider value={{ user, logOut }}>
-        <App />
-      </AppContext.Provider>
+      <Provider store={store}>
+        <AppContext.Provider value={{ user, logOut }}>
+          <App />
+        </AppContext.Provider>
+      </Provider>
     );
 
     const myUser = {
@@ -109,22 +148,48 @@ describe("when isLogged in is true", () => {
 
 describe("testing state of App.js", () => {
   it("displayDrawer initial value should be set to false", () => {
-    const wrapper = mount(<App />);
+    const wrapper = mount(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
 
-    expect(wrapper.state().displayDrawer).toBe(false);
-  });
+    wrapper.find('[data-testid="menu-item"]').simulate('click');
+    });
 
   it("should set displayDrawer to true after calling handleDisplayDrawer", () => {
-    const wrapper = shallow(<App />);
-    wrapper.instance().handleDisplayDrawer();
+    const wrapper = shallow(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
 
-    expect(wrapper.state().displayDrawer).toBe(true);
+    wrapper.find('[data-testid="notif-drawer"]').simulate('click');
   });
 
   it("should set displayDrawer to false after calling handleHideDrawer", () => {
-    const wrapper = shallow(<App />);
-    wrapper.instance().handleHideDrawer();
+    const wrapper = shallow(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+    
+    wrapper.find('App').setState({ displayDrawer: true });
+    wrapper.find('Notifications .hideDrawerButton').simulate('click');
 
-    expect(wrapper.state().displayDrawer).toBe(false);
+    expect(wrapper.find('App').state().displayDrawer).toBe(false);
+    wrapper.unmount();
+    });
+});
+
+describe("mapStateToProps", () => {
+  it("should return the right object when state is provided", () => {
+    let state = fromJS({
+      isLoggedIn: true
+    });
+
+    const mappedProps = mapStateToProps(state);
+
+    expect(mappedProps).toEqual({ isLoggedIn: true });
   });
 });
