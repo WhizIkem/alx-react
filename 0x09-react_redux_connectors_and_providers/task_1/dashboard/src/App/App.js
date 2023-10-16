@@ -11,17 +11,22 @@ import PropTypes from "prop-types";
 import { getLatestNotification } from "../utils/utils";
 import { AppContext, user } from "./AppContext";
 import { connect } from "react-redux";
-import {
-  displayNotificationDrawer,
-  hideNotificationDrawer
-} from "../actions/uiActionCreators"; // Make sure the import path is correct
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      displayDrawer: false,
+      user: user,
+      logOut: this.logOut,
+    };
+
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleDisplayDrawer = this.handleDisplayDrawer.bind(this);
+    this.handleHideDrawer = this.handleHideDrawer.bind(this);
     this.logIn = this.logIn.bind(this);
+    this.logOut = this.logOut.bind(this);
   }
 
   listCourses = [
@@ -40,13 +45,21 @@ class App extends React.Component {
     if (e.ctrlKey && e.key === "h") {
       e.preventDefault();
       alert("Logging you out");
-      this.props.hideNotificationDrawer();
+      this.props.logOut();
     }
+  }
+
+  handleDisplayDrawer() {
+    this.setState({ displayDrawer: true });
+  }
+
+  handleHideDrawer() {
+    this.setState({ displayDrawer: false });
   }
 
   componentDidMount() {
     if (typeof document !== "undefined") {
-      document.addEventListener("keydown", this.handleKeyPress);
+    document.addEventListener("keydown", this.handleKeyPress);
     }
   }
 
@@ -55,39 +68,59 @@ class App extends React.Component {
   }
 
   logIn(email, password) {
-    // Your login logic here
+    this.setState({
+      user: {
+        email,
+        password,
+        isLoggedIn: true,
+      },
+    });
+  }
+
+  logOut() {
+    this.setState({
+      user: user,
+    });
   }
 
   render() {
     return (
-      <AppContext.Provider value={{ user: this.props.user }}>
-        <div className={css(styles.App)}>
-          <div className="heading-section">
-            <button className="displayDrawer" onClick={this.props.displayNotificationDrawer}>Open</button>
-            <Notifications
-              listNotifications={this.listNotifications}
-              displayDrawer={this.props.displayDrawer}
-              handleDisplayDrawer={this.props.displayNotificationDrawer}
-              handleHideDrawer={this.props.hideNotificationDrawer}
-            />
-            <Header />
+      <AppContext.Provider
+        value={{
+          user: this.state.user,
+          logout: this.state.logOut,
+        }}
+      >
+        <React.Fragment>
+          <div className={css(styles.App)}>
+            <div className="heading-section">
+              <button className="displayDrawer" onClick={this.handleDisplayDrawer}>Open</button>
+              <Notifications
+                listNotifications={this.listNotifications}
+                displayDrawer={this.state.displayDrawer}
+                handleDisplayDrawer={this.handleDisplayDrawer}
+                handleHideDrawer={this.handleHideDrawer}
+              />
+              <Header />
+            </div>
+            {this.state.user.isLoggedIn ? (
+              <BodySectionWithMarginBottom title="Course list">
+                <CourseList listCourses={this.listCourses} />
+              </BodySectionWithMarginBottom>
+            ) : (
+              <BodySectionWithMarginBottom title="Log in to continue">
+                <Login logIn={this.logIn} />
+              </BodySectionWithMarginBottom>
+            )}
+            <BodySection title="News from the school">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis at tempora odio, necessitatibus repudiandae reiciendis cum nemo sed asperiores ut molestiae eaque aliquam illo
+                ipsa iste vero dolor voluptates.
+              </p>
+            </BodySection>
+            <Footer />
           </div>
-          {this.props.isLoggedIn ? (
-            <BodySectionWithMarginBottom title="Course list">
-              <CourseList listCourses={this.listCourses} />
-            </BodySectionWithMarginBottom>
-          ) : (
-            <BodySectionWithMarginBottom title="Log in to continue">
-              <Login logIn={this.logIn} />
-            </BodySectionWithMarginBottom>
-          )}
-          <BodySection title="News from the school">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis at tempora odio, necessitatibus repudiandae reiciendis cum nemo sed asperiores ut molestiae eaque aliquam illo ipsa iste vero dolor voluptates.
-            </p>
-          </BodySection>
-          <Footer />
-        </div>
+        </React.Fragment>
       </AppContext.Provider>
     );
   }
@@ -102,23 +135,22 @@ const styles = StyleSheet.create({
   },
 });
 
+App.defaultProps = {
+  isLoggedIn: false,
+  logOut: () => {
+    return;
+  },
+};
+
 App.propTypes = {
-  user: PropTypes.object.isRequired,
   isLoggedIn: PropTypes.bool,
-  displayDrawer: PropTypes.bool,
-  displayNotificationDrawer: PropTypes.func,
-  hideNotificationDrawer: PropTypes.func
+  logOut: PropTypes.func,
 };
 
-const mapStateToProps = (state) => ({
-  user: state.user,
-  isLoggedIn: state.isLoggedIn,
-  displayDrawer: state.isNotificationDrawerVisible
-});
-
-const mapDispatchToProps = {
-  displayNotificationDrawer,
-  hideNotificationDrawer
+export const mapStateToProps = (state) => {
+  return {
+    isLoggedIn: state.get('isLoggedIn')
+  };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps)(App);

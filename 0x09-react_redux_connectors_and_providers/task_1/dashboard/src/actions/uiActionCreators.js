@@ -2,7 +2,9 @@ import {
   LOGIN,
   LOGOUT,
   DISPLAY_NOTIFICATION_DRAWER,
-  HIDE_NOTIFICATION_DRAWER
+  HIDE_NOTIFICATION_DRAWER,
+  LOGIN_SUCCESS, 
+  LOGIN_FAILURE
 } from './uiActionTypes';
 import fetch from 'node-fetch';
 
@@ -12,7 +14,7 @@ export function login(email, password) {
     user: {
       email,
       password
-    }
+    },
   };
 }
 
