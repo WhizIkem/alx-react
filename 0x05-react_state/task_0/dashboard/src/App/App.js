@@ -70,7 +70,7 @@ class App extends React.Component {
     return (
       <>
         <Notifications
-          listNotifications={this.listNotifications}
+          listNotifications={this.state.listNotifications}
           displayDrawer={this.state.displayDrawer}
           handleDisplayDrawer={this.handleDisplayDrawer}
           handleHideDrawer={this.handleHideDrawer}
