@@ -12,12 +12,19 @@ class Notifications extends Component {
     this.markAsRead = this.markAsRead.bind(this);
   }
 
-  shouldComponentUpdate(nextProps) {
-    return nextProps.length > this.props.listNotifications.length;
-  }
-
   markAsRead(id) {
     console.log(`Notification ${id} has been marked as read`);
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const { listNotifications: currentList } = this.props;
+    const { listNotifications: nextList } = nextProps;
+    
+    if (currentList && nextList) {
+      return nextList.length > currentList.length;
+    }
+
+    return true;
   }
 
   render() {

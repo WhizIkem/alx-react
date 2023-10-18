@@ -50,12 +50,12 @@ describe("Notification tests", () => {
     expect(wrapper.contains(<p>Here is the list of notifications</p>)).toBe(false);
   });
 
-  // it("displays menu item when displayDrawer is false", () => {
-  //   const wrapper = shallow(<Notifications displayDrawer={false} />);
+  it("displays menu item when displayDrawer is false", () => {
+    const wrapper = shallow(<Notifications displayDrawer={false} />);
 
-  //   expect(wrapper.find("div.menuItem").exists()).toBe(true);
-  //   expect(wrapper.find("div.menuItem").html()).toEqual('<div class="menuItem"><p>Your notifications</p></div>');
-  // });
+    expect(wrapper.find("div.menuItem").exists()).toBe(true);
+    expect(wrapper.find("div.menuItem").html()).toEqual('<div class="menuItem"><p>Your notifications</p></div>');
+  });
 
   it("does not display notifications when displayDrawer is false", () => {
     const wrapper = shallow(<Notifications displayDrawer={false} />);
@@ -105,12 +105,13 @@ describe("Notification tests", () => {
   });
 
   it("doesnt re-render when the list passed as prop is the same", () => {
-    const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
+    const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={[]} />);
 
-    expect(wrapper.instance().shouldComponentUpdate(listNotifications)).toBe(false);
+    expect(wrapper.instance().shouldComponentUpdate({ listNotifications: [] })).toBe(false);
   });
 
   it("re-renders if listNotifications if listNotifications is changed", () => {
+    const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
     const newListNotifications = [
       { id: 1, type: "default", value: "New course available" },
       { id: 2, type: "urgent", value: "New resume available" },
@@ -118,9 +119,8 @@ describe("Notification tests", () => {
       { id: 4, type: "default", value: "Foo" },
     ];
 
-    const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
-
-    expect(wrapper.instance().shouldComponentUpdate(newListNotifications)).toBe(true);
+    const shouldUpdate = wrapper.instance().shouldComponentUpdate({ listNotifications: newListNotifications });
+    expect(shouldUpdate).toBe(true);
   });
 });
 
