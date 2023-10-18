@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 const WithLogging = (WrappedComponent) => {
   class WithLoggingComponent extends Component {
     componentDidMount() {
-      console.log(`Component $(this.getDisplayName(WrappedComponent)) is mounted`)
+      console.log(`Component ${this.getDisplayName(WrappedComponent)} is mounted`)
     }
 
     componentWillUnmount() {
-      console.log(`Component $(this.getDisplayName(WrappedComponent)) is going to unmount`)
+      console.log(`Component ${this.getDisplayName(WrappedComponent)} is going to unmount`)
     }
 
     getDisplayName(WrappedComponent) {
@@ -19,7 +19,7 @@ const WithLogging = (WrappedComponent) => {
     } 
   }
 
-  WithLoggingComponent.displayName = `WithLogging($(WithLoggingComponent.displayName || 'Component'})`;
+  WithLoggingComponent.displayName = `WithLogging(${WithLoggingComponent.displayName || 'Component'})`;
 
   return WithLoggingComponent;
 };

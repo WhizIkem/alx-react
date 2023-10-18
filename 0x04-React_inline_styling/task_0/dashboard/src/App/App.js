@@ -42,11 +42,15 @@ class App extends React.Component {
     document.removeEventListener('keydown', this.handleKeyDown);
   }
 
+  showAlert(message) {
+    alert(message);
+    this.props.logOut();
+  }
+
   handleKeyDown = (event) => {
     if (event.ctrlKey && event.key === 'h') {
       event.preventDefault();
-      alert('Logging you out');
-      this.props.logOut();
+      this.showAlert('Logging you out');
     }
   };
 
@@ -59,9 +63,7 @@ class App extends React.Component {
           <BodySectionWithMarginBottom title="Course list">
             {this.props.isLoggedIn ? (
             <CourseList listCourses={this.listCourses} />
-          ) : (
-            <Login />
-          )}
+          ) : null}
           </BodySectionWithMarginBottom>
           <BodySectionWithMarginBottom title="Log in to continue">
             {this.props.isLoggedIn ? null : <Login />}

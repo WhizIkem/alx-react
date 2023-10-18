@@ -15,22 +15,23 @@ describe("WithLogging HOC", () => {
 
   it('should log messages when wrapping pure HTML', () => {
     const WrappedComponent = () => <p>Pure HTML</p>;
+    WrappedComponent.displayName = 'PureHTML'
     const ComponentWithLogging = WithLogging(WrappedComponent);
-
+  
     const wrapper = shallow(<ComponentWithLogging />);
     wrapper.unmount();
-
-    expect(spyConsoleLog).toHaveBeenCalledWith('Component is mounted');
-    expect(spyConsoleLog).toHaveBeenCalledWith('Component is going to unmount');
+  
+    expect(spyConsoleLog).toHaveBeenCalledWith('Component PureHTML is mounted');
+    expect(spyConsoleLog).toHaveBeenCalledWith('Component PureHTML is going to unmount');
   });
-
+  
   it('should log messages with component name for Login component', () => {
     const Login = () => <p>Login component</p>;
     const ComponentWithLogging = WithLogging(Login);
-
+  
     const wrapper = shallow(<ComponentWithLogging />);
     wrapper.unmount();
-
+  
     expect(spyConsoleLog).toHaveBeenCalledWith('Component Login is mounted');
     expect(spyConsoleLog).toHaveBeenCalledWith('Component Login is going to unmount');
   });

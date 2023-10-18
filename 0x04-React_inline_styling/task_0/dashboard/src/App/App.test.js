@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import App from './App';
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
@@ -84,9 +84,10 @@ describe("When ctrl + h is pressed", () => {
     wrapper.unmount();
   });
 
+  document.alert = jest.fn();
   it("checks that alert function is called", () => {
     const wrapper = mount(<App />);
-    const spy = jest.spyOn(window, "alert");
+    const spy = jest.spyOn(window, 'alert');
     const event = new KeyboardEvent("keydown", { ctrlKey: true, key: "h" });
     document.dispatchEvent(event);
 
@@ -97,12 +98,21 @@ describe("When ctrl + h is pressed", () => {
 
   it('checks that the alert is "Logging you out"', () => {
     const wrapper = mount(<App />);
-    const spy = jest.spyOn(window, "alert");
+    const spy = jest.spyOn(window, 'alert');
     const event = new KeyboardEvent("keydown", { ctrlKey: true, key: "h" });
     document.dispatchEvent(event);
 
     expect(spy).toHaveBeenCalledWith("Logging you out");
     jest.restoreAllMocks();
     wrapper.unmount();
+  });
+  
+  it('calls showAlert function', () => {
+    const mockedShowAlert = jest.spyOn(App.prototype, 'showAlert');
+    const wrapper = shallow(<App logOut={() => {}} />);
+    const event = new KeyboardEvent('keydown', { ctrlKey: true, key: 'h'});
+    document.dispatchEvent(event);
+
+    expect(mockedShowAlert).toHaveBeenCalledWith('Logging you out');
   });
 });

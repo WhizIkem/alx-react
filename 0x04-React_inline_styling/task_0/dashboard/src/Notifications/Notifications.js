@@ -17,7 +17,14 @@ class Notifications extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.listNotifications.length > this.props.listNotifications.length;
+    const { listNotifications: currentList } = this.props;
+    const { listNotifications: nextList } = nextProps;
+    
+    if (currentList && nextList) {
+      return nextList.length > currentList.length;
+    }
+
+    return true;
   }
 
   render() {
