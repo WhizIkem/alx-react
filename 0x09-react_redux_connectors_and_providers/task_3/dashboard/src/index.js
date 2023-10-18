@@ -8,6 +8,8 @@ import thunk from 'redux-thunk'; // Import redux-thunk
 import App from './App/App';
 
 // Apply the Redux DevTools Extension and the Thunk middleware
+const composeWithDevTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+
 const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(thunk))
